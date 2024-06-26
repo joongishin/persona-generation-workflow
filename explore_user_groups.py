@@ -19,7 +19,7 @@ def generate_embedding(_key_data):
         return
 
     # read the user data from csv
-    data = pd.read_csv(f"data/{se.file_name}", delimiter=";")
+    data = pd.read_csv(f"data/{se.file_name}",)
 
     # select the specific user data
     user_data = data[_key_data].copy()
@@ -64,7 +64,7 @@ def hierarchy_clustering(_num_cluster):
     df.to_csv(f"llm_summarizing/exploration/{output_file_name}", index=False)
 
     # create a new dataset with cluster result
-    user_data = pd.read_csv(f"data/{se.file_name}", delimiter=";")
+    user_data = pd.read_csv(f"data/{se.file_name}")
     user_data["user_group"] = cluster_assignment
     user_data.to_csv(f"llm_summarizing/exploration/grouped_{se.file_name}", index=False)
     print("\n### Done. Grouped user data. ###\n")
@@ -95,9 +95,9 @@ def plot_dendrogram(_num_cluster):
     plt.xlabel('User responses')
     plt.ylabel('Distances')
     plt.title(f'Hierarchical Clustering with {num_group} user groups.')
-    plt.show()
 
     plt.savefig(f"llm_summarizing/exploration/dendrogram_group_size_{_num_cluster}.pdf", bbox_inches="tight")
+    plt.show()
 
 
 def summarize(_num_groups):
@@ -140,7 +140,7 @@ def summarize(_num_groups):
 
 if __name__ == "__main__":
     # The name of user data that contains key characteristics for creating user groups.
-    # (i.e., the column names from "synthetic_responses.csv")
+    # (i.e., the column names from "synthetic_surveys.csv")
     key_data = ["child_expect", "child_need"]
 
     # The number of user groups to create.

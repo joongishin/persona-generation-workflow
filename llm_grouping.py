@@ -5,7 +5,7 @@ import settings as se
 
 def llm_grouping(_key_characteristics):
     # Prepare user data
-    user_data = pd.read_csv(f"data/{se.file_name}", delimiter=";")
+    user_data = pd.read_csv(f"data/{se.file_name}")
     user_data_list = user_data.values.tolist()
 
     prompt = [
