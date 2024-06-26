@@ -1,13 +1,13 @@
 import openai
-import settings as s
+import settings as se
 
-openai.api_key = s.openai_api_key
+openai.api_key = se.openai_api_key
 
 # OpenAI API for chat completion:
 # https://platform.openai.com/docs/api-reference/chat/create?lang=python
 def chat_completion(_prompt):
     response = openai.chat.completions.create(
-        model=s.gpt_model,
+        model=se.gpt_model,
         messages=_prompt,
     )
 
@@ -19,7 +19,7 @@ def chat_completion(_prompt):
 # https://platform.openai.com/docs/api-reference/embeddings/create
 def text_embedding(_text):
     response = openai.embeddings.create(
-        model=s.embedding_model,
+        model=se.embedding_model,
         input=_text,
     )
 

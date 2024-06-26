@@ -1,7 +1,7 @@
 import os
 import pandas as pd
-import functions as f
-import settings as s
+import functions as fu
+import settings as se
 import numpy as np
 from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
@@ -11,15 +11,15 @@ import matplotlib.pyplot as plt
 # Text-embedding-based clustering for LLM-summarizing:
 # https://platform.openai.com/docs/guides/embeddings/what-are-embeddings
 def generate_embedding(_key_data):
-    output_file_name = f"embedding_{s.file_name}"
+    output_file_name = f"embedding_{se.file_name}"
 
     # check if the text embedding already exists
-    if os.path.exists(f"llm_summarizing/{output_file_name}"):
+    if os.path.exists(f"llm_summarizing/exploration/{output_file_name}"):
         print(f"\nFile {output_file_name} already exists. Skipping embedding generation.\n")
         return
 
     # read the user data from csv
-    data = pd.read_csv(f"data/{s.file_name}", delimiter=";")
+    data = pd.read_csv(f"data/{se.file_name}", delimiter=";")
 
     # select the specific user data
     user_data = data[_key_data].copy()
@@ -29,24 +29,24 @@ def generate_embedding(_key_data):
 
     # generate text embedding per combined user data and store it to a new column.
     print("\n### Generating text embeddings. Please wait ... ###\n")
-    user_data["embedding"] = user_data["combined"].apply(f.text_embedding)
+    user_data["embedding"] = user_data["combined"].apply(fu.text_embedding)
 
     # save the result
-    user_data.to_csv(f"llm_summarizing/{output_file_name}", index=False)
+    user_data.to_csv(f"llm_summarizing/exploration/{output_file_name}", index=False)
     print("\n### Done. Text embedding generated ###\n")
 
 
 def hierarchy_clustering(_num_cluster):
-    input_file_name = f"embedding_{s.file_name}"
-    output_file_name = f"clustering_{_num_cluster}_{s.file_name}"
+    input_file_name = f"embedding_{se.file_name}"
+    output_file_name = f"clustering_{_num_cluster}_{se.file_name}"
 
     # check if the text embedding already exists
-    if os.path.exists(f"llm_summarizing/{output_file_name}"):
+    if os.path.exists(f"llm_summarizing/exploration/{output_file_name}"):
         print(f"\nFile {output_file_name} already exists. Skipping embedding generation.\n")
         return
 
     # Load the dataframe
-    df = pd.read_csv(f"llm_summarizing/{input_file_name}")
+    df = pd.read_csv(f"llm_summarizing/exploration/{input_file_name}")
 
     # convert string to numpy array
     embeddings = np.vstack(df["embedding"].apply(eval).apply(np.array).values)
@@ -61,19 +61,19 @@ def hierarchy_clustering(_num_cluster):
 
     # Store the cluster result as csv file
     df["cluster"] = cluster_assignment
-    df.to_csv(f"llm_summarizing/{output_file_name}", index=False)
+    df.to_csv(f"llm_summarizing/exploration/{output_file_name}", index=False)
 
     # create a new dataset with cluster result
-    user_data = pd.read_csv(f"data/{s.file_name}", delimiter=";")
+    user_data = pd.read_csv(f"data/{se.file_name}", delimiter=";")
     user_data["user_group"] = cluster_assignment
-    user_data.to_csv(f"llm_summarizing/grouped_{s.file_name}", index=False)
+    user_data.to_csv(f"llm_summarizing/exploration/grouped_{se.file_name}", index=False)
     print("\n### Done. Grouped user data. ###\n")
 
 
 def plot_dendrogram(_num_cluster):
     # Load the dataframe
-    input_file_name = f"clustering_{_num_cluster}_{s.file_name}"
-    df = pd.read_csv(f"llm_summarizing/{input_file_name}")
+    input_file_name = f"clustering_{_num_cluster}_{se.file_name}"
+    df = pd.read_csv(f"llm_summarizing/exploration/{input_file_name}")
 
     # convert string to numpy array
     embeddings = np.vstack(df["embedding"].apply(eval).apply(np.array).values)
@@ -97,12 +97,12 @@ def plot_dendrogram(_num_cluster):
     plt.title(f'Hierarchical Clustering with {num_group} user groups.')
     plt.show()
 
-    plt.savefig(f"llm_summarizing/dendrogram_group_size_{_num_cluster}.pdf", bbox_inches="tight")
+    plt.savefig(f"llm_summarizing/exploration/dendrogram_group_size_{_num_cluster}.pdf", bbox_inches="tight")
 
 
 def summarize(_num_groups):
     # Prepare user data
-    user_data = pd.read_csv(f"llm_summarizing/grouped_{s.file_name}")
+    user_data = pd.read_csv(f"llm_summarizing/exploration/grouped_{se.file_name}")
 
     # Generate a summarize per grouped user data
     for group_num in range(_num_groups):
@@ -125,14 +125,14 @@ def summarize(_num_groups):
         input_prompt = prompt[0]["content"]
 
         # compute output
-        output = f.chat_completion(prompt)
+        output = fu.chat_completion(prompt)
 
         # Display output
         print("\n### Output ###\n")
         print(output, "\n")
 
         # save output
-        with open(f"llm_summarizing/user_group_{group_num}.txt", "w") as text_file:
+        with open(f"llm_summarizing/exploration/user_group_{group_num}.txt", "w") as text_file:
             text_file.write(output)
 
     print(f"\n### Done. Summarized user groups. ###\n")
