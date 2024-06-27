@@ -18,12 +18,13 @@
 <br>
 
 ## Setup
+
 You need OpenAI API key to try out our workflow. Follow [Developer quickstart](https://platform.openai.com/docs/quickstart) from OpenAI.
 
 1. Download our repository.
-2. Install the OpenAI library.
+2. Install libraries (the following versions are tested with [Python 3.10.2](https://www.python.org/downloads/release/python-3102/)).
 ```
-pip install openai
+pip install matplotlib==3.7.1 numpy==1.24.2 openai==1.35.5 pandas==2.0.2 scikit_learn==1.2.2 scipy==1.14.0
 ```
 3. Open [settings.py](./settings.py) to input your OpenAI API key and set the models available to you. For example...
 ```
@@ -36,7 +37,7 @@ embedding_model = "text-embedding-ada-002"
 <br>
 
 ## Usage
-We provide [synthetic user data](./data/synthetic_surveys.csv) generated with gpt-3.5-turbo for trying out our workflows. It is 20 responses to a survey aimed at collecting user data for designing civis services that address declining birth rates.
+We provide [synthetic user data](./data/synthetic_surveys.csv) generated with gpt-3.5-turbo for trying out our workflows. It is 20 responses to a survey aimed at collecting user data for designing civic services that address declining birth rates.
 Accordingly, the contents of personas are set in [settings.py](./settings.py). They will be used in a prompt to instruct LLMs what to describe in personas.
 ```
 file_name = "synthetic_survey.csv"
@@ -104,7 +105,7 @@ max_number_of_memory = 3
 ```bibtex
  @inproceedings{shin:2024:perGenWorkflow,
     title={Understanding Human–AI Workflows for Generating Personas},
-    author = {shin, Joongi and Hedderich, Michael A. and Rey, Bartłomiej Jakub and Lucero, Andrés and Oulasvirta, Antti},
+    author = {Shin, Joongi and Hedderich, Michael A. and Rey, Bartłomiej Jakub and Lucero, Andrés and Oulasvirta, Antti},
     publisher = {Association for computing Machinery},
     booktitle = {Proceedings of the 2024 ACM Designing Interactive Systems Conference},
     year={2024},
